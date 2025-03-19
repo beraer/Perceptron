@@ -33,6 +33,18 @@ public class Perceptron {
         }
     }
 
+    public double test(List<Vector> data) {
+        int correct = 0;
+        for (Vector v : data) {
+            int predicted = predict(v.features);
+            int actual = v.label.equals("Iris-virginica") ? 1 : 0;
+            if (predicted == actual) {
+                correct++;
+            }
+        }
+        return 100.0 * correct / data.size();
+    }
+
     public int predict(double[] testVector) {
 
         double z = 0.0;
