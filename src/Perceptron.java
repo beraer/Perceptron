@@ -1,37 +1,67 @@
+import java.util.List;
+
 public class Perceptron {
-    private static double dotProduct(double[] w, double[] x) {
-        double sum = 0.0;
-        for (int i = 0; i < w.length; i++) {
-            sum += w[i] * x[i];
-        }
-        return sum;
+
+    private double[] weights;
+    private double learningRate;
+    private int epochs;
+    private double bias;
+
+
+
+    public Perceptron(double learningRate, int epochs) {
+        this.learningRate = learningRate;
+        this.epochs = epochs;
     }
 
-    // Method to apply the discrete activation function
-    private static int activation(double z) {
+    public double[] getInitialWeights(int dimension){
+        double[] weights = new double[dimension];
+        for(int i = 0; i < dimension; i++) weights[i] = Math.random();
+        return weights;
+    }
+
+    public void train(List<Vector> data){
+        int numOfFeatures = data.get(0).features.length;
+        weights = getInitialWeights(numOfFeatures);
+        bias = Math.random();
+
+        for(int e = 0; e < epochs; e++){
+            for(Vector v : data){
+                int labelInt = v.label.equals("Iris-virginica") ? 1 : 0;
+                updateWeights(v.features, labelInt);
+            }
+        }
+    }
+
+    public int predict(double[] testVector) {
+
+        double z = 0.0;
+        for (int i = 0; i < weights.length; i++) {
+            z += weights[i] * testVector[i];
+        }
+
+        return activation(z - bias); //and bias is here to optimize also!!!
+    }
+
+    public static int activation(double z) {
         return z > 0 ? 1 : 0;
     }
 
-    // Method to calculate the perceptron output
-    public static int perceptronOutput(double[] w, double[] x, double theta, double alpha) {
-        double z = dotProduct(w, x) + theta;
-        return activation(z);
+    public void updateWeights(double[] trainVector, int label) {
+        int prediction = predict(trainVector);
+        int error = label - prediction;
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] += learningRate * error * trainVector[i];
+        }
+        bias = bias - learningRate * error; //updating bias in updateWeights too
     }
 
 
-    public static void main(String[] args) {
-
-        double[] w = {2, -1, 4, 1};
-        double theta = 3;
-        double alpha = 0.01;
-
-        double[] x1 = {7, -2, -5, 4};
-        double[] x2 = {2, 0, 2, 8};
-
-        int output1 = perceptronOutput(w, x1, theta, alpha);
-        int output2 = perceptronOutput(w, x2, theta, alpha);
-
-        System.out.println("Output for x1: " + output1);
-        System.out.println("Output for x2: " + output2);
+    public static double dotProduct(double[] x, double[] y) {
+        double sum = 0;
+        for (int i = 0; i < x.length; i++) {
+            sum += x[i] * y[i];
+        }
+        return sum;
     }
 }

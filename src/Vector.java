@@ -1,8 +1,8 @@
-public class DataPoint {
+public class Vector {
     double[] features;
     String label;
     
-    public DataPoint(double[] features, String label) {
+    public Vector(double[] features, String label) {
         this.features = features;
         this.label = label;
     }
