@@ -6,7 +6,7 @@ public class PerceptronUI extends JFrame {
     private JTextField txtLearningRate, txtEpochs, txtTrainFile, txtTestFile;
     private JButton btnTrain, btnTest;
     private JTextArea txtOutput;
-    private Perceptron perceptron; // Instance of your Perceptron class
+    private Perceptron perceptron;
     private List<Vector> trainingData;
     private List<Vector> testData;
 
@@ -18,7 +18,7 @@ public class PerceptronUI extends JFrame {
 
         JPanel topPanel = new JPanel(new FlowLayout());
         topPanel.add(new JLabel("Learning Rate:"));
-        txtLearningRate = new JTextField("0.01", 5);
+        txtLearningRate = new JTextField("0.001", 5);
         topPanel.add(txtLearningRate);
 
         topPanel.add(new JLabel("Epochs:"));
