@@ -8,7 +8,6 @@ public class Perceptron {
     private double bias;
 
 
-
     public Perceptron(double learningRate, int epochs) {
         this.learningRate = learningRate;
         this.epochs = epochs;
@@ -33,6 +32,25 @@ public class Perceptron {
         }
     }
 
+    public void updateWeights(double[] trainVector, int label) {
+        int prediction = predict(trainVector);
+        int error = label - prediction;
+        for (int i = 0; i < weights.length; i++) {
+            //learning rule /\ W' = W + (d-y) * X * alpha
+            //where W' = new W, W = old W, (d-y) = error, d(actual) & y(predicted), X = input vec, alpha = learningRate
+            weights[i] += learningRate * error * trainVector[i];
+        }
+        //theta = theta + (d-y)*(-1)
+        bias = bias - learningRate * error; //updating bias in updateWeights too
+    }
+
+    public int predict(double[] testVector) {
+
+        double z = dotProduct(weights, testVector);
+        z -= bias;
+        return activation(z);
+    }
+
     public double test(List<Vector> data) {
         int correct = 0;
         for (Vector v : data) {
@@ -45,29 +63,9 @@ public class Perceptron {
         return 100.0 * correct / data.size();
     }
 
-    public int predict(double[] testVector) {
-
-        double z = 0.0;
-        for (int i = 0; i < weights.length; i++) {
-            z += weights[i] * testVector[i];
-        }
-
-        return activation(z - bias); //and bias is here to optimize also!!!
-    }
-
     public static int activation(double z) {
         return z > 0 ? 1 : 0;
     }
-
-    public void updateWeights(double[] trainVector, int label) {
-        int prediction = predict(trainVector);
-        int error = label - prediction;
-        for (int i = 0; i < weights.length; i++) {
-            weights[i] += learningRate * error * trainVector[i];
-        }
-        bias = bias - learningRate * error; //updating bias in updateWeights too
-    }
-
 
     public static double dotProduct(double[] x, double[] y) {
         double sum = 0;
