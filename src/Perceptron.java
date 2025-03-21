@@ -36,18 +36,19 @@ public class Perceptron {
         int prediction = predict(trainVector);
         int error = label - prediction;
         for (int i = 0; i < weights.length; i++) {
-            //learning rule /\ W' = W + (d-y) * X * alpha
+            //learning rule(delta rule) /\ W' = W + (d-y) * X * alpha
             //where W' = new W, W = old W, (d-y) = error, d(actual) & y(predicted), X = input vec, alpha = learningRate
             weights[i] += learningRate * error * trainVector[i];
         }
-        //theta = theta + (d-y)*(-1)
+        //threshold' = threshold + (d-y)*(-1)
         bias = bias - learningRate * error; //updating bias in updateWeights too
     }
 
     public int predict(double[] testVector) {
-
+        //formula for decision boundary = (W*X - b = 0)
+        //this is the moment which we check W*X-b >=0?
         double z = dotProduct(weights, testVector);
-        z -= bias;
+        z -= bias; //this is where bias is applied to shift the plane
         return activation(z);
     }
 
